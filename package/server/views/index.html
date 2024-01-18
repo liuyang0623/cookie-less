@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>cookie-less测试</title>
+</head>
+<body>
+  <div>
+    <p>iframe测试页</p>
+    <div id="id-content"></div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script>
+    const idc = document.getElementById('id-content')
+    function getQueryValue(key, href) {
+      href = href || window.location.search
+      var match = href.match(new RegExp("[?&]" + key + "=([^&]*)"))
+      return (match && match[1] && decodeURIComponent(match[1])) || ""
+    }
+    function getMid() {
+      $.ajax({
+        method: 'GET',
+        url: '/uid',
+        data: { type: getQueryValue('type') },
+        success: (res) => {
+          if (res.code === 0) {
+            localStorage.setItem('__uid', res.data.uid)
+            idc.innerText = `获取到uid：${res.data.uid}`
+          }
+        }
+      })
+    }
+    function getAdData() {
+      $.ajax({
+        method: 'GET',
+        url: '/getAd',
+        headers: {
+          uuid: localStorage.getItem('__uid')
+        },
+        success: (res) => {
+          console.log(res)
+        }
+      })
+    }
+    if (!localStorage.getItem('__uid')) {
+      getMid()
+    } else {
+      idc.innerText = `已存在uid：${localStorage.getItem('__uid')}`
+      getAdData()
+    }
+  </script>
+</body>
+</html>

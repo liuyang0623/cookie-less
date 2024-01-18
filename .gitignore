@@ -1,0 +1,15 @@
+node_modules
+.DS_Store
+.idea
+
+dist
+coverage
+.pnpm-store
+tsconfig.tsbuildinfo
+
+.env.prod
+*.local
+*.cache
+*error.log
+*debug.log
+*.conf
